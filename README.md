@@ -48,7 +48,7 @@ Below is an example of how you can use our modules:
 
 ```hcl
 module "dex_example" {
-  source = "git::https://github.com/dexlabsio/terraform-modules/<cloud>/<module>"  
+  source = "git::https://github.com/dexlabsio/terraform-modules.git//<cloud>/<module>"  
   // Customize input variables as needed
 }
 ```
