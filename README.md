@@ -15,6 +15,10 @@ consistency across different cloud environments.
     additional configurations to generate the required resources for
     allowing traffic flow between the connected VPCs.
 
+- [deX Roles](aws/dex-roles): This module facilitates the configuration
+    of all IAM permissions necessary for dex to manage specific resources
+    on partner's cloud.
+
 ### GCP
 
 _(Under Construction)_

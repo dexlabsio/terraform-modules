@@ -18,7 +18,7 @@ variable aws_account_id {
   type = string
 }
 
-variable dex_user_name {
-  description = "The name of the IAM user to create for deX"
+variable dex_external_identity_arn {
+  description = "The ARN of an external IAM identity that belongs to deX's cloud and will be provided by deX to the customers"
   type = string
 }

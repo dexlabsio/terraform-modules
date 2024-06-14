@@ -8,6 +8,7 @@ resource "aws_iam_role" "DeXAthenaSparkRole" {
       Action    = "sts:AssumeRole"
     }]
   })
+
   inline_policy {
     name   = "AthenaSparkPermissions"
     policy = jsonencode({
@@ -49,7 +50,6 @@ resource "aws_iam_role" "DeXAthenaSparkRole" {
           Resource = "arn:aws:athena:${var.region_of_choice}:${var.aws_account_id}:workgroup/*"
         },
         {
-          Sid      = "VisualEditor0"
           Effect   = "Allow"
           Action   = [
             "logs:CreateLogStream",
@@ -63,13 +63,11 @@ resource "aws_iam_role" "DeXAthenaSparkRole" {
           ]
         },
         {
-          Sid      = "VisualEditor1"
           Effect   = "Allow"
           Action   = "logs:DescribeLogGroups"
           Resource = "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:*"
         },
         {
-          Sid      = "VisualEditor2"
           Effect   = "Allow"
           Action   = "cloudwatch:PutMetricData"
           Resource = "*"
@@ -94,6 +92,7 @@ resource "aws_iam_role" "DeXGlueCrawlerRole" {
       Action    = "sts:AssumeRole"
     }]
   })
+
   inline_policy {
     name   = "GlueCrawlerPermissions"
     policy = jsonencode({
@@ -158,119 +157,111 @@ resource "aws_iam_role" "DeXGlueCrawlerRole" {
   }
 }
 
-resource "aws_iam_user" "dex_user" {
-  name = var.dex_user_name
+resource "aws_iam_policy" "dex_automation_policy" {
+  name = "DexAutomationPolicy"
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = "iam:PassRole"
+        Resource = [
+          aws_iam_role.DeXAthenaSparkRole.arn,
+          aws_iam_role.DeXGlueCrawlerRole.arn
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = "iam:PassRole"
+        Resource = [
+          "arn:aws:athena:${var.region_of_choice}:${var.aws_account_id}:workgroup/*",
+          "arn:aws:s3:::${var.dex_lakehouse_bucket_name}",
+          "arn:aws:s3:::${var.dex_lakehouse_bucket_name}/*",
+          "arn:aws:s3:::${var.athena_results_bucket_name}",
+          "arn:aws:s3:::${var.athena_results_bucket_name}/*"
+        ]
+      },
+      {
+        Effect   = "Allow"
+        Action   = [
+          "iam:GetRole",
+          "iam:ListRoles",
+        ]
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = [
+          "s3:ListAllMyBuckets",
+          "s3:ListBucket"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = "s3:*"
+        Resource = [
+          "arn:aws:s3:::${var.dex_lakehouse_bucket_name}/*",
+          "arn:aws:s3:::${var.athena_results_bucket_name}/*",
+          "arn:aws:s3:::${var.dex_lakehouse_bucket_name}",
+          "arn:aws:s3:::${var.athena_results_bucket_name}"
+        ]
+      },
+      {
+        Effect   = "Allow"
+        Action   = [
+          "athena:*",
+          "glue:*",
+        ]
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = "logs:DescribeLogGroups"
+        Resource = "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:*"
+      },
+      {
+        Effect  = "Allow"
+        Action = [
+          "logs:Describe*",
+          "logs:Get*",
+          "logs:List*",
+          "logs:StartQuery",
+          "logs:StopQuery",
+          "logs:TestMetricFilter",
+          "logs:FilterLogEvents",
+          "logs:StartLiveTail",
+          "logs:StopLiveTail",
+          "cloudwatch:GenerateQuery"
+        ]
+        Resource = [
+            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-athena:*",
+            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-athena*:log-stream:*",
+            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-glue:*",
+            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-glue*:log-stream:*",
+        ]
+      },
+    ]
+  })
 }
 
-resource "aws_iam_user_login_profile" "dex_user_login" {
-  user    = aws_iam_user.dex_user.name
-  password_reset_required = false
+data "aws_iam_policy_document" "dex_external_role_assume_role" {
+  statement {
+    effect = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = [var.dex_external_identity_arn]
+    }
+  }
 }
 
-resource "aws_iam_user_policy" "dex_user_policy" {
-  name = "DexUserPolicy"
-  user = aws_iam_user.dex_user.name
-    policy = jsonencode({
-      Version   = "2012-10-17"
-      Statement = [
-        {
-          Sid    = "VisualEditor0"
-          Effect = "Allow"
-          Action = "iam:PassRole"
-          Resource = [
-            aws_iam_role.DeXAthenaSparkRole.arn,
-            aws_iam_role.DeXGlueCrawlerRole.arn
-          ]
-        },
-        {
-          Sid    = "VisualEditor1"
-          Effect = "Allow"
-          Action = "iam:PassRole"
-          Resource = [
-            "arn:aws:athena:${var.region_of_choice}:${var.aws_account_id}:workgroup/*",
-            "arn:aws:s3:::${var.dex_lakehouse_bucket_name}",
-            "arn:aws:s3:::${var.dex_lakehouse_bucket_name}/*",
-            "arn:aws:s3:::${var.athena_results_bucket_name}",
-            "arn:aws:s3:::${var.athena_results_bucket_name}/*"
-          ]
-        },
-        {
-          Sid      = "VisualEditor2"
-          Effect   = "Allow"
-          Action   = [
-            "iam:GetRole",
-            "s3:ListAllMyBuckets",
-            "iam:ListRoles",
-            "athena:*",
-            "glue:*",
-            "glue:GetTable",
-            "s3:ListBucket"
-          ]
-          Resource = "*"
-        },
-        {
-          Sid    = "VisualEditor3"
-          Effect = "Allow"
-          Action = "s3:*"
-          Resource = [
-            "arn:aws:s3:::${var.dex_lakehouse_bucket_name}/*",
-            "arn:aws:s3:::${var.athena_results_bucket_name}/*",
-            "arn:aws:s3:::${var.dex_lakehouse_bucket_name}",
-            "arn:aws:s3:::${var.athena_results_bucket_name}"
-          ]
-        },
-        {
-          Effect   = "Allow"
-          Action   = "iam:ChangePassword"
-          Resource = aws_iam_user.dex_user.arn
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "iam:ListVirtualMFADevices",
-                "iam:CreateVirtualMFADevice",
-                "iam:DeleteVirtualMFADevice"
-            ],
-            "Resource": [
-                "*"
-            ]
-        },
-        {
-            "Sid": "CloudWatchLogsReadOnlyAccess",
-            "Effect": "Allow",
-            "Action": [
-                "logs:Describe*",
-                "logs:Get*",
-                "logs:List*",
-                "logs:StartQuery",
-                "logs:StopQuery",
-                "logs:TestMetricFilter",
-                "logs:FilterLogEvents",
-                "logs:StartLiveTail",
-                "logs:StopLiveTail",
-                "cloudwatch:GenerateQuery"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "iam:GetLoginProfile",
-                "iam:ListAccessKeys",
-                "iam:ListSigningCertificates",
-                "iam:GetUser",
-                "iam:ListMFADevices",
-                "iam:ListUserTags",
-                "iam:GetAccessKeyLastUsed",
-                "iam:CreateAccessKey",
-                "iam:DeleteAccessKey",
-                "iam:UpdateAccessKey",
-                "iam:EnableMFADevice"
-            ],
-            "Resource": [
-                aws_iam_user.dex_user.arn
-            ]
-        }
-      ]
-    })
+resource "aws_iam_role" "dex_automation" {
+  name               = "deXAutomationRole"
+  assume_role_policy = data.aws_iam_policy_document.dex_external_role_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "dex_automation_role_attachment" {
+  role       = aws_iam_role.dex_automation.name
+  policy_arn = aws_iam_policy.dex_automation_policy.arn
 }
