@@ -96,13 +96,6 @@ resource "aws_iam_role" "lambda_mwaa_rbac_role" {
       {
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:sts::${var.aws_account_id}:assumed-role/LambdaExecutionRole/MwaaAuthxFunction"
-        },
-        Action    = "sts:AssumeRole"
-      },
-      {
-        Effect    = "Allow",
-        Principal = {
           AWS = aws_iam_role.lambda_execution_role.arn
         },
         Action    = "sts:AssumeRole"
