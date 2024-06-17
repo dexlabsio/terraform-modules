@@ -72,6 +72,10 @@ resource "aws_lb" "alb" {
     prefix  = "connection-logs"
     enabled = true
   }
+
+  depends_on = [
+    aws_lambda_function.mwaa_authx_function,
+  ]
 }
 
 resource "aws_lb_target_group" "lambda_tg" {
