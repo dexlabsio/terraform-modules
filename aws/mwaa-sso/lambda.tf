@@ -146,14 +146,14 @@ resource "aws_iam_role_policy" "lambda_assume_mwaa_roles" {
 
 ## Auth Lambda
 resource "aws_cloudwatch_log_group" "mwaa_authx_function" {
-  name              = "/aws/lambda/MwaaAuthxFunction"
+  name              = "/aws/lambda/MwaaAuthxFunction${var.company_name}"
   retention_in_days = 14
 }
 
 resource "aws_lambda_function" "mwaa_authx_function" {
   s3_bucket = "dex-public-assets"
   s3_key    = "sso/auth/lambda/MwaaAuthxFunction.zip"
-  function_name = "MwaaAuthxFunction"
+  function_name = "MwaaAuthxFunction${var.company_name}"
   role          = aws_iam_role.lambda_execution_role.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"

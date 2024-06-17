@@ -79,7 +79,7 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "lambda_tg" {
-  name     = "lambda-target-group"
+  name     = "lambda-tg-${local.mwaa_sso_alb_name}"
   target_type = "lambda"
   vpc_id   = var.mwaa_vpc_id
   lambda_multi_value_headers_enabled = true
@@ -97,7 +97,7 @@ resource "aws_lb_target_group_attachment" "lambda_attachment" {
 }
 
 resource "aws_lb_target_group" "mwaa_endpoint_tg" {
-  name     = "mwaa-endpoint-target-group"
+  name     = "mwaa-tg-${local.mwaa_sso_alb_name}"
   port     = 443
   protocol = "HTTPS"
   vpc_id   = var.mwaa_vpc_id
