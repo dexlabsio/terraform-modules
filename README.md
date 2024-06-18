@@ -19,9 +19,15 @@ consistency across different cloud environments.
     of all IAM permissions necessary for dex to manage specific resources
     on partner's cloud.
 
-- [deX Roles](aws/cross-account-secrets): This Terraform module facilitates secure cross-account 
-    access to AWS Secrets Manager secrets. It addresses the necessity of configuring both resource  
-    policies and identity policies to enable users in one AWS account to access secrets stored in another account.
+- [deX Cross Account Secrets](aws/cross-account-secrets): This Terraform
+    module facilitates secure cross-account access to AWS Secrets Manager
+    secrets. It addresses the necessity of configuring both resource
+    policies and identity policies to enable users in one AWS account to
+    access secrets stored in another account.
+
+- [deX MWAA SSO](aws/mwaa-sso): This module abstracts the complexity of
+    configuring MWAA SSO using AWS Cognito. This way, external users can
+    access Airflow IDE from outside.
 
 ### GCP
 

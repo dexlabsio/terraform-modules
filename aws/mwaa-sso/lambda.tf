@@ -1,6 +1,14 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
+local {
+  account_id = data.aws_caller_identity.current.account_id
+  region = data.aws_region.current.name
+}
+
 # IAM Role for Lambda Execution
 resource "aws_iam_role" "lambda_execution_role" {
-  name = "LambdaExecutionRoleMwaaAuth${var.company_name}"
+  name = "LambdaExecutionRoleMwaaAuth${var.name}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -37,7 +45,7 @@ resource "aws_iam_role_policy" "lambda_execution_policy" {
           "logs:GetLogGroupFields",
           "logs:DescribeLogGroups"
         ],
-        Resource = "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:*"
+        Resource = "arn:aws:logs:${local.region}:${local.account_id}:log-group:*"
       },
       {
         Effect   = "Allow",
@@ -74,7 +82,7 @@ variable "mwaa_roles_names" {
 resource "aws_iam_role" "lambda_mwaa_rbac_role" {
   for_each = toset(var.mwaa_roles_names)
 
-  name = "Lambda${each.key}RbacRole${var.company_name}"
+  name = "Lambda${each.key}RbacRole${var.name}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -89,7 +97,7 @@ resource "aws_iam_role" "lambda_mwaa_rbac_role" {
       {
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${var.aws_account_id}:root"
+          AWS = "arn:aws:iam::${local.account_id}:root"
         },
         Action    = "sts:AssumeRole"
       },
@@ -114,7 +122,7 @@ resource "aws_iam_role" "lambda_mwaa_rbac_role" {
             "airflow:CreateWebLoginToken",
             "sts:AssumeRole"
           ],
-          Resource = "arn:aws:airflow:${var.aws_region}:${var.aws_account_id}:role/${var.mwaa_env_name}/${each.key}"
+          Resource = "arn:aws:airflow:${local.region}:${local.account_id}:role/${var.mwaa_env_name}/${each.key}"
         }
       ]
     })
@@ -138,7 +146,7 @@ resource "aws_iam_role_policy" "lambda_assume_mwaa_roles" {
       {
         Effect   = "Allow",
         Action   = "airflow:GetEnvironment",
-        Resource = "arn:aws:airflow:${var.aws_region}:${var.aws_account_id}:environment/*"
+        Resource = "arn:aws:airflow:${local.region}:${local.account_id}:environment/*"
       }
     ]
   })
@@ -146,14 +154,14 @@ resource "aws_iam_role_policy" "lambda_assume_mwaa_roles" {
 
 ## Auth Lambda
 resource "aws_cloudwatch_log_group" "mwaa_authx_function" {
-  name              = "/aws/lambda/MwaaAuthxFunction${var.company_name}"
+  name              = "/aws/lambda/MwaaAuthxFunction${var.name}"
   retention_in_days = 14
 }
 
 resource "aws_lambda_function" "mwaa_authx_function" {
   s3_bucket = "dex-public-assets"
   s3_key    = "sso/auth/lambda/MwaaAuthxFunction.zip"
-  function_name = "MwaaAuthxFunction${var.company_name}"
+  function_name = "MwaaAuthxFunction${var.name}"
   role          = aws_iam_role.lambda_execution_role.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"
@@ -165,12 +173,12 @@ resource "aws_lambda_function" "mwaa_authx_function" {
     variables = {
       MWAA_ENVIRONMENT_NAME  = var.mwaa_env_name
       RBAC_ROLE_NAME         = var.mwaa_rbac_role_name
-      RBAC_ADMIN_ROLE_ARN    = "arn:aws:iam::${var.aws_account_id}:role/service-role/LambdaAdminRbacRole${var.company_name}"
-      RBAC_USER_ROLE_ARN     = "arn:aws:iam::${var.aws_account_id}:role/service-role/LambdaUserRbacRole${var.company_name}"
-      RBAC_VIEWER_ROLE_ARN   = "arn:aws:iam::${var.aws_account_id}:role/service-role/LambdaViewerRbacRole${var.company_name}"
-      RBAC_OP_ROLE_ARN       = "arn:aws:iam::${var.aws_account_id}:role/service-role/LambdaOpRbacRole${var.company_name}"
-      RBAC_PUBLIC_ROLE_ARN   = "arn:aws:iam::${var.aws_account_id}:role/service-role/LambdaPublicRbacRole${var.company_name}"
-      PUBLIC_KEY_ENDPOINT    = "https://public-keys.auth.elb.${var.aws_region}.amazonaws.com/"
+      RBAC_ADMIN_ROLE_ARN    = "arn:aws:iam::${local.account_id}:role/service-role/LambdaAdminRbacRole${var.company_name}"
+      RBAC_USER_ROLE_ARN     = "arn:aws:iam::${local.account_id}:role/service-role/LambdaUserRbacRole${var.company_name}"
+      RBAC_VIEWER_ROLE_ARN   = "arn:aws:iam::${local.account_id}:role/service-role/LambdaViewerRbacRole${var.company_name}"
+      RBAC_OP_ROLE_ARN       = "arn:aws:iam::${local.account_id}:role/service-role/LambdaOpRbacRole${var.company_name}"
+      RBAC_PUBLIC_ROLE_ARN   = "arn:aws:iam::${local.account_id}:role/service-role/LambdaPublicRbacRole${var.company_name}"
+      PUBLIC_KEY_ENDPOINT    = "https://public-keys.auth.elb.${local.region}.amazonaws.com/"
       ALB_COOKIE_NAME        = var.alb_session_cookie_name
     }
   }

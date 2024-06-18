@@ -55,7 +55,7 @@ POLICY
 
 resource "aws_lb" "alb" {
   name               = local.mwaa_sso_alb_name
-  internal           = !var.alb_internet_facing
+  internal           = var.alb_access_mode == "PRIVATE"
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
   subnets            = var.public_subnets_ids
