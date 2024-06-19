@@ -1,15 +1,24 @@
 # deX VPC Peering Terraform Module
 
 ## Overview
-This Terraform module facilitates secure cross-account access to AWS Secrets Manager secrets. It addresses the necessity of configuring both resource 
-policies and identity policies to enable users in one AWS account to access secrets stored in another account. Additionally, it ensures that the identity 
-has permission to use the associated KMS keys for decryption, adhering to AWS security best practices.
-To learn more, reference: https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_examples_cross.html.
+This Terraform module facilitates secure cross-account access to AWS
+Secrets Manager secrets. It addresses the necessity of configuring both
+resource policies and identity policies to enable users in one AWS
+account to access secrets stored in another account. Additionally, it
+ensures that the identity has permission to use the associated KMS keys
+for decryption, adhering to AWS security best practices. To learn more,
+reference: https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_examples_cross.html.
 
 ## Features
-- Dynamic Policy Configuration: Automatically generates and attaches policies to secrets and KMS keys based on provided ARNs, facilitating easy management of access controls.
-- Customizable Variables: Allows specification of secrets ARNs, external role ARN, and KMS keys ARNs, offering flexibility in configuring access patterns.
-- Compliance with AWS Best Practices: Adheres to AWS recommendations for securing cross-account access, emphasizing the use of customer-managed KMS keys for encryption.
+- Dynamic Policy Configuration: Automatically generates and attaches
+    policies to secrets and KMS keys based on provided ARNs,
+    facilitating easy management of access controls.
+- Customizable Variables: Allows specification of secrets ARNs, external
+    role ARN, and KMS keys ARNs, offering flexibility in configuring
+    access patterns.
+- Compliance with AWS Best Practices: Adheres to AWS recommendations for
+    securing cross-account access, emphasizing the use of
+    customer-managed KMS keys for encryption.
 
 ## Prerequisites
 - AWS account
@@ -26,8 +35,10 @@ module "dex_vpc_peering" {
   source                = "https://github.com/dexlabsio/terraform-modules.git//cross-account-secrets"
 
   secrets_arn_list = ["arn:aws:secretsmanager:region:source-account-id:secret:secret-name"]
-  external_role_arn = "arn:aws:iam::external-account-id:role/external-role"
   kms_keys_id_list = ["6aab8134-f139-44f2-88d3-4cd016cdf0ce"]
+
+  // This will be provided by deX
+  external_role_arn = "arn:aws:iam::external-account-id:role/external-role"
 }
 ```
 
