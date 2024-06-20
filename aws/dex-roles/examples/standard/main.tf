@@ -30,3 +30,15 @@ module "dex_roles" {
   dex_lakehouse_bucket_name  = aws_s3_bucket.dex_lakehouse.id
   dex_external_identity_arn = "arn:aws:iam::1234567890:role/ExternalIdentity"
 }
+
+output "cross_account_access_role_arn" {
+  value = module.dex_roles.cross_account_access_role_arn
+}
+
+output "cross_account_access_role_name" {
+  value = module.dex_roles.cross_account_access_role_name
+}
+
+output "cross_account_id" {
+  value = module.dex_roles.cross_account_id
+}

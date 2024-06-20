@@ -38,8 +38,15 @@ The module configures the following resources:
 |----------------------------------|------------------------------------------------------------------------------------------------------|
 | `athena_results_bucket_name`     | Specifies the S3 bucket used to store query results from Athena. This bucket is central to managing the output of data analytics operations. |
 | `dex_lakehouse_bucket_name`      | Defines the S3 bucket intended for use as a data lakehouse. This bucket stores structured and semi-structured data for analytics and business intelligence operations. |
-| `dex_external_account_id`        | "The external account ID that belongs to deX team and will be provided by deX to the customers. |
+| `dex_external_account_id`        | The external account ID that belongs to deX team and will be provided by deX to the customers. |
 
+## Variables
+
+| Outputs                          | Description                                                                                          |
+|----------------------------------|------------------------------------------------------------------------------------------------------|
+| `cross_account_access_role_arn`  | deX team will need this role ARN so that they can configure automation within your account. |
+| `cross_account_access_role_name` | deX team will need this role name so that they can configure automation within your account. |
+| `cross_account_id`               | deX team will need your account ID to create external access policies and securely configure cross-account access. |
 
 ## Usage
 
@@ -67,4 +74,3 @@ Apply the configuration using:
 ```bash
 terraform apply
 ```
-

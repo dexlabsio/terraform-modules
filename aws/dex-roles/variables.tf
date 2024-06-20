@@ -9,6 +9,6 @@ variable dex_lakehouse_bucket_name {
 }
 
 variable dex_external_account_id {
-  description = "The external account ID that belongs to deX team and will be provided by deX to the customers"
+  description = "The external account ID that belongs to deX team and will be provided by deX to the customers."
   type = string
 }
