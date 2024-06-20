@@ -38,7 +38,7 @@ The module configures the following resources:
 |----------------------------------|------------------------------------------------------------------------------------------------------|
 | `athena_results_bucket_name`     | Specifies the S3 bucket used to store query results from Athena. This bucket is central to managing the output of data analytics operations. |
 | `dex_lakehouse_bucket_name`      | Defines the S3 bucket intended for use as a data lakehouse. This bucket stores structured and semi-structured data for analytics and business intelligence operations. |
-| `dex_external_identity_arn`      | The ARN of an external IAM identity that belongs to deX's cloud and will be provided by deX to the customers. |
+| `dex_external_account_id`        | "The external account ID that belongs to deX team and will be provided by deX to the customers. |
 
 
 ## Usage
@@ -51,7 +51,7 @@ module "dex_roles" {
 
   athena_results_bucket_name = "my-athena-results-bucket"
   dex_lakehouse_bucket_name  = "my-dex-lakehouse-bucket"
-  dex_external_identity_arn = "arn:aws:iam::123456789012:group/example"
+  dex_external_account_id = "601697184715"
 }
 
 ```

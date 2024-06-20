@@ -254,7 +254,7 @@ data "aws_iam_policy_document" "dex_external_role_assume_role" {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "AWS"
-      identifiers = [var.dex_external_identity_arn]
+      identifiers = var.dex_external_account_id
     }
   }
 }
