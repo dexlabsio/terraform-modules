@@ -21,7 +21,7 @@ resource "aws_route53_record" "mwaa_access_cert_validation" {
     }
   }
 
-  zone_id = data.aws_route53_zone.customers_aws_dexlabs_io.zone_id
+  zone_id = var.hosted_zone_id
   name    = each.value.name
   type    = each.value.type
   records = [each.value.record]

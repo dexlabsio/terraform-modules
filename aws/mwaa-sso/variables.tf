@@ -55,7 +55,7 @@ variable "public_subnets_ids" {
   type        = list(string)
   description = <<-EOT
     (Required) A list of at least two Subnet IDs from your VPC, each residing in different AWS availability zones.
-    The Subnet IDs must correspond to public subnets if you set `InternetFacing` to true, otherwise, they should be for private subnets.
+    The Subnet IDs must correspond to public subnets if you set `alb_access_mode` to PUBLIC, otherwise, they should be for private subnets.
   EOT
   validation {
     condition     = length(var.public_subnets_ids) >= 2
@@ -87,7 +87,7 @@ variable "alb_access_mode" {
   EOT
   default     = "PRIVATE"
   validation {
-    condition     = can(regex("(PUBLIC|PRIVATE)", var.alb_internet_facing))
+    condition     = can(regex("(PUBLIC|PRIVATE)", var.alb_access_mode))
     error_message = "The value for alb_access_mode must be either 'PUBLIC' or 'PRIVATE'."
   }
 }

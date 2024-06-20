@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
-local {
+locals {
   account_id = data.aws_caller_identity.current.account_id
   region = data.aws_region.current.name
 }
@@ -173,11 +173,11 @@ resource "aws_lambda_function" "mwaa_authx_function" {
     variables = {
       MWAA_ENVIRONMENT_NAME  = var.mwaa_env_name
       RBAC_ROLE_NAME         = var.mwaa_rbac_role_name
-      RBAC_ADMIN_ROLE_ARN    = "arn:aws:iam::${local.account_id}:role/service-role/LambdaAdminRbacRole${var.company_name}"
-      RBAC_USER_ROLE_ARN     = "arn:aws:iam::${local.account_id}:role/service-role/LambdaUserRbacRole${var.company_name}"
-      RBAC_VIEWER_ROLE_ARN   = "arn:aws:iam::${local.account_id}:role/service-role/LambdaViewerRbacRole${var.company_name}"
-      RBAC_OP_ROLE_ARN       = "arn:aws:iam::${local.account_id}:role/service-role/LambdaOpRbacRole${var.company_name}"
-      RBAC_PUBLIC_ROLE_ARN   = "arn:aws:iam::${local.account_id}:role/service-role/LambdaPublicRbacRole${var.company_name}"
+      RBAC_ADMIN_ROLE_ARN    = "arn:aws:iam::${local.account_id}:role/service-role/LambdaAdminRbacRole${var.name}"
+      RBAC_USER_ROLE_ARN     = "arn:aws:iam::${local.account_id}:role/service-role/LambdaUserRbacRole${var.name}"
+      RBAC_VIEWER_ROLE_ARN   = "arn:aws:iam::${local.account_id}:role/service-role/LambdaViewerRbacRole${var.name}"
+      RBAC_OP_ROLE_ARN       = "arn:aws:iam::${local.account_id}:role/service-role/LambdaOpRbacRole${var.name}"
+      RBAC_PUBLIC_ROLE_ARN   = "arn:aws:iam::${local.account_id}:role/service-role/LambdaPublicRbacRole${var.name}"
       PUBLIC_KEY_ENDPOINT    = "https://public-keys.auth.elb.${local.region}.amazonaws.com/"
       ALB_COOKIE_NAME        = var.alb_session_cookie_name
     }
