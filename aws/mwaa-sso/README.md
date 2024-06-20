@@ -98,6 +98,14 @@ integration of Google SSO with AWS MWAA.
 | `mwaa_rbac_role_name`   | The RBAC role to be assumed by the user. Possible values are Public, User, Op, Admin, and Viewer. | `string` | No       | `Viewer` | [Airflow Access Control Documentation](https://airflow.apache.org/docs/apache-airflow-providers-fab/stable/auth-manager/access-control.html#) |
 | `mwaa_vpc_id`           | The VPC Id of your existing MWAA environment.                    | `string`       | Yes      |         |                                                                                                               |
 
+## Lambda Configuration Variables
+
+| Name                    | Description                                                      | Type           | Required | Default | Reference                                                                                                      |
+|-------------------------|------------------------------------------------------------------|----------------|----------|---------|---------------------------------------------------------------------------------------------------------------|
+| `lambda_function_bucket`      | s3 bucket where the lambda function is stored. It should exist in the same region as the lambda function | `string`       | Yes      |         |                                                                                                               |
+| `lambda_function_object_key`  | The relative path of the .zip function within this bucket.        | `string`       | Yes      |         |                                                                                                               |
+
+
 ### Network Configuration Variables
 
 | Name                    | Description                                                                                   | Type           | Required | Default | Reference |

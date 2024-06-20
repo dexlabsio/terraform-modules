@@ -106,3 +106,16 @@ variable "cognito_context" {
     user_pool_domain       = string
   })
 }
+
+variable "lambda_function_bucket" {
+  type = string
+  description = <<-EOT
+    (Required) s3 bucket where the lambda function is stored
+    It should exist in the same region as the lambda function
+  EOT
+}
+
+variable "lambda_function_object_key" {
+  type = string
+  description = "(Required) The relative path of the .zip function within this bucket"
+}

@@ -28,7 +28,7 @@ resource "aws_route53_record" "mwaa_access_cert_validation" {
   ttl     = 60
 }
 
-resource "aws_route53_record" "shared_customers_prod_alb_record" {
+resource "aws_route53_record" "mwaa_alb_record" {
   zone_id = var.hosted_zone_id
   name    = var.domain
   type    = "A"

@@ -159,8 +159,8 @@ resource "aws_cloudwatch_log_group" "mwaa_authx_function" {
 }
 
 resource "aws_lambda_function" "mwaa_authx_function" {
-  s3_bucket = "dex-public-assets"
-  s3_key    = "sso/auth/lambda/MwaaAuthxFunction.zip"
+  s3_bucket = var.lambda_function_bucket
+  s3_key    = var.lambda_function_object_key
   function_name = "MwaaAuthxFunction${var.name}"
   role          = aws_iam_role.lambda_execution_role.arn
   handler       = "lambda_function.lambda_handler"
