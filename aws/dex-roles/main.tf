@@ -1,3 +1,6 @@
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_role" "DeXAthenaSparkRole" {
   name               = "deXAthenaSparkRole"
   assume_role_policy = jsonencode({
@@ -47,7 +50,7 @@ resource "aws_iam_role" "DeXAthenaSparkRole" {
             "athena:ExportNotebook",
             "athena:UpdateNotebook"
           ]
-          Resource = "arn:aws:athena:${var.region_of_choice}:${var.aws_account_id}:workgroup/*"
+          Resource = "arn:aws:athena:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:workgroup/*"
         },
         {
           Effect   = "Allow"
@@ -58,14 +61,14 @@ resource "aws_iam_role" "DeXAthenaSparkRole" {
             "logs:PutLogEvents"
           ]
           Resource = [
-            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-athena:*",
-            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-athena*:log-stream:*"
+            "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws-athena:*",
+            "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws-athena*:log-stream:*"
           ]
         },
         {
           Effect   = "Allow"
           Action   = "logs:DescribeLogGroups"
-          Resource = "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:*"
+          Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"
         },
         {
           Effect   = "Allow"
@@ -174,7 +177,7 @@ resource "aws_iam_policy" "dex_automation_policy" {
         Effect = "Allow"
         Action = "iam:PassRole"
         Resource = [
-          "arn:aws:athena:${var.region_of_choice}:${var.aws_account_id}:workgroup/*",
+          "arn:aws:athena:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:workgroup/*",
           "arn:aws:s3:::${var.dex_lakehouse_bucket_name}",
           "arn:aws:s3:::${var.dex_lakehouse_bucket_name}/*",
           "arn:aws:s3:::${var.athena_results_bucket_name}",
@@ -218,7 +221,7 @@ resource "aws_iam_policy" "dex_automation_policy" {
       {
         Effect   = "Allow"
         Action   = "logs:DescribeLogGroups"
-        Resource = "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:*"
+        Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"
       },
       {
         Effect  = "Allow"
@@ -235,10 +238,10 @@ resource "aws_iam_policy" "dex_automation_policy" {
           "cloudwatch:GenerateQuery"
         ]
         Resource = [
-            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-athena:*",
-            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-athena*:log-stream:*",
-            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-glue:*",
-            "arn:aws:logs:${var.region_of_choice}:${var.aws_account_id}:log-group:/aws-glue*:log-stream:*",
+            "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws-athena:*",
+            "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws-athena*:log-stream:*",
+            "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws-glue:*",
+            "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws-glue*:log-stream:*",
         ]
       },
     ]

@@ -28,7 +28,5 @@ module "dex_roles" {
 
   athena_results_bucket_name = aws_s3_bucket.athena_results.id
   dex_lakehouse_bucket_name  = aws_s3_bucket.dex_lakehouse.id
-  region_of_choice           = "us-east-1"
-  aws_account_id             = "0987654321"
   dex_external_identity_arn = "arn:aws:iam::1234567890:role/ExternalIdentity"
 }
