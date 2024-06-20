@@ -22,6 +22,15 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
+resource "aws_security_group_rule" "allow_alb_to_access_airflow" {
+  type              = "ingress"
+  protocol          = "tcp"
+  to_port           = 443
+  from_port         = 443
+  security_group_id = var.mwaa_security_group_id
+  source_security_group_id = aws_security_group.alb_sg.id
+}
+
 data "aws_elb_service_account" "main" {}
 
 resource "aws_s3_bucket" "lb_logs" {

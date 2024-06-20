@@ -51,6 +51,11 @@ variable "mwaa_endpoint_ips" {
   }
 }
 
+variable "mwaa_security_group_id" {
+  description = "(Required) The security group of MWAA environment we'll attach a new rule for the alb to access Airflow webserver."
+  type = string
+}
+
 variable "public_subnets_ids" {
   type        = list(string)
   description = <<-EOT
