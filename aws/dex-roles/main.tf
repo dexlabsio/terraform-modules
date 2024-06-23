@@ -268,3 +268,63 @@ resource "aws_iam_role_policy_attachment" "dex_automation_role_attachment" {
   role       = aws_iam_role.dex_automation.name
   policy_arn = aws_iam_policy.dex_automation_policy.arn
 }
+
+resource "aws_athena_workgroup" "dbt_sql_prod" {
+  name = "dbt_sql_prod"
+
+  configuration {
+    result_configuration {
+      output_location = "s3://${var.athena_results_bucket_name}/dbt_sql_prod/"
+    }
+
+    enforce_workgroup_configuration = true
+  }
+}
+
+resource "aws_athena_workgroup" "dbt_sql_dev" {
+  name = "dbt_sql_dev"
+
+  configuration {
+    result_configuration {
+      output_location = "s3://${var.athena_results_bucket_name}/dbt_sql_dev/"
+    }
+
+    enforce_workgroup_configuration = true
+  }
+}
+
+resource "aws_athena_workgroup" "dbt_spark_prod" {
+  name = "dbt_spark_prod"
+
+  configuration {
+    execution_role = aws_iam_role.DeXAthenaSparkRole.arn
+    
+    engine_version {
+      selected_engine_version = "PySpark engine version 3"
+    }
+
+    result_configuration {
+      output_location = "s3://${var.athena_results_bucket_name}/dbt_spark_prod/"
+    }
+
+    enforce_workgroup_configuration = true
+  }
+}
+
+resource "aws_athena_workgroup" "dbt_spark_dev" {
+  name = "dbt_spark_dev"
+
+  configuration {
+    execution_role = aws_iam_role.DeXAthenaSparkRole.arn
+
+    engine_version {
+      selected_engine_version = "PySpark engine version 3"
+    }
+
+    result_configuration {
+      output_location = "s3://${var.athena_results_bucket_name}/dbt_spark_dev/"
+    }
+
+    enforce_workgroup_configuration = true
+  }
+}
