@@ -31,6 +31,8 @@ The module configures the following resources:
 - Two IAM roles with extensive permissions to interact with Athena, Glue, and S3.
 - Inline policies that outline specific access rights to Athena, Glue, and S3, including logging and monitoring permissions.
 - An IAM user with a comprehensive policy that includes permissions for IAM operations, S3 bucket access, and Athena workgroup management.
+- Two Athena SQL workgroups: one for the development environment and the other for production
+- Two Athena Spark workgroups: one for the development environment and the other for production
 
 ## Variables
 
