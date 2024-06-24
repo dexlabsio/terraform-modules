@@ -270,7 +270,7 @@ resource "aws_iam_role_policy_attachment" "dex_automation_role_attachment" {
 }
 
 resource "aws_athena_workgroup" "dbt_sql_prod" {
-  name = "dbt_sql_prod"
+  name = "dbt-sql-prod"
 
   configuration {
     result_configuration {
@@ -282,7 +282,7 @@ resource "aws_athena_workgroup" "dbt_sql_prod" {
 }
 
 resource "aws_athena_workgroup" "dbt_sql_dev" {
-  name = "dbt_sql_dev"
+  name = "dbt-sql-dev"
 
   configuration {
     result_configuration {
@@ -294,7 +294,7 @@ resource "aws_athena_workgroup" "dbt_sql_dev" {
 }
 
 resource "aws_athena_workgroup" "dbt_spark_prod" {
-  name = "dbt_spark_prod"
+  name = "dbt-spark-prod"
 
   configuration {
     execution_role = aws_iam_role.DeXAthenaSparkRole.arn
@@ -312,7 +312,7 @@ resource "aws_athena_workgroup" "dbt_spark_prod" {
 }
 
 resource "aws_athena_workgroup" "dbt_spark_dev" {
-  name = "dbt_spark_dev"
+  name = "dbt-spark-dev"
 
   configuration {
     execution_role = aws_iam_role.DeXAthenaSparkRole.arn
