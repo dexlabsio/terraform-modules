@@ -28,7 +28,7 @@ module "dex_roles" {
 
   athena_results_bucket_name = aws_s3_bucket.athena_results.id
   dex_lakehouse_bucket_name  = aws_s3_bucket.dex_lakehouse.id
-  dex_external_identity_arn = "arn:aws:iam::1234567890:role/ExternalIdentity"
+  dex_external_account_id = "601697184715"
 }
 
 output "cross_account_access_role_arn" {
