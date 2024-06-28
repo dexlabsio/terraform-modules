@@ -277,7 +277,7 @@ resource "aws_athena_workgroup" "dbt_sql_prod" {
       output_location = "s3://${var.athena_results_bucket_name}/dbt_sql_prod/"
     }
 
-    enforce_workgroup_configuration = true
+    enforce_workgroup_configuration = false
   }
 }
 
@@ -289,7 +289,7 @@ resource "aws_athena_workgroup" "dbt_sql_dev" {
       output_location = "s3://${var.athena_results_bucket_name}/dbt_sql_dev/"
     }
 
-    enforce_workgroup_configuration = true
+    enforce_workgroup_configuration = false
   }
 }
 
@@ -307,7 +307,7 @@ resource "aws_athena_workgroup" "dbt_spark_prod" {
       output_location = "s3://${var.athena_results_bucket_name}/dbt_spark_prod/"
     }
 
-    enforce_workgroup_configuration = true
+    enforce_workgroup_configuration = false
   }
 }
 
@@ -325,6 +325,6 @@ resource "aws_athena_workgroup" "dbt_spark_dev" {
       output_location = "s3://${var.athena_results_bucket_name}/dbt_spark_dev/"
     }
 
-    enforce_workgroup_configuration = true
+    enforce_workgroup_configuration = false
   }
 }
