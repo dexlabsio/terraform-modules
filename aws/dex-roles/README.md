@@ -40,7 +40,7 @@ The module configures the following resources:
 |----------------------------------|------------------------------------------------------------------------------------------------------|
 | `athena_results_bucket_name`     | Specifies the S3 bucket used to store query results from Athena. This bucket is central to managing the output of data analytics operations. |
 | `dex_lakehouse_bucket_name`      | Defines the S3 bucket intended for use as a data lakehouse. This bucket stores structured and semi-structured data for analytics and business intelligence operations. |
-| `dex_external_account_id`        | The external account ID that belongs to deX team and will be provided by deX to the customers. |
+| `dex_external_account_id`        | `601697184715` The external account ID that belongs to deX team. |
 
 ## Variables
 
@@ -56,7 +56,7 @@ To use this module, include it in your Terraform configurations and provide the 
 
 ```hcl
 module "dex_roles" {
-  source                     = "https://github.com/dexlabsio/terraform-modules.git//aws/dex-roles"
+  source                     = "git::https://github.com/dexlabsio/terraform-modules.git//aws/dex-roles"
 
   athena_results_bucket_name = "my-athena-results-bucket"
   dex_lakehouse_bucket_name  = "my-dex-lakehouse-bucket"
