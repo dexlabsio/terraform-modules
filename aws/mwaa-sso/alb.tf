@@ -87,8 +87,13 @@ resource "aws_lb" "alb" {
   ]
 }
 
+locals {
+  default_lambda_tg_name = "lambda-tg-${local.mwaa_sso_alb_name}"
+  default_mwaa_tg_name = "mwaa-tg-${local.mwaa_sso_alb_name}"
+}
+
 resource "aws_lb_target_group" "lambda_tg" {
-  name     = "lambda-tg-${local.mwaa_sso_alb_name}"
+  name     = length(var.custom_lambda_tg_name) > 0 ? var.custom_lambda_tg_name : local.default_lambda_tg_name
   target_type = "lambda"
   vpc_id   = var.mwaa_vpc_id
   lambda_multi_value_headers_enabled = true
@@ -106,7 +111,7 @@ resource "aws_lb_target_group_attachment" "lambda_attachment" {
 }
 
 resource "aws_lb_target_group" "mwaa_endpoint_tg" {
-  name     = "mwaa-tg-${local.mwaa_sso_alb_name}"
+  name     = length(var.custom_mwaa_tg_name) > 0 ? var.custom_mwaa_tg_name : local.default_mwaa_tg_name
   port     = 443
   protocol = "HTTPS"
   vpc_id   = var.mwaa_vpc_id

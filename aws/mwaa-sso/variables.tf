@@ -124,3 +124,15 @@ variable "lambda_function_object_key" {
   type = string
   description = "(Required) The relative path of the .zip function within this bucket"
 }
+
+variable "custom_lambda_tg_name" {
+  description = "Custom name for ALB target group pointing to the lambda"
+  type        = string
+  default     = ""
+}
+
+variable "custom_mwaa_tg_name" {
+  description = "Custom name for ALB target group pointing to the MWAA cluster"
+  type        = string
+  default     = ""
+}
