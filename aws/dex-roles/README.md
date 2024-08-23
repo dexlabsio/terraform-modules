@@ -50,6 +50,11 @@ The module configures the following resources:
 | `cross_account_access_role_name` | deX team will need this role name so that they can configure automation within your account. |
 | `cross_account_id`               | deX team will need your account ID to create external access policies and securely configure cross-account access. |
 
+## Prerequisites
+
+- AWS CLI v2: [Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- Terraform: [Installation Guide](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+
 ## Usage
 
 To use this module, include it in your Terraform configurations and provide the required variable inputs. An example usage is as follows:
