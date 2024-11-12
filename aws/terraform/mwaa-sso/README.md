@@ -48,7 +48,7 @@ your Terraform configuration
 
 ```hcl
 module "mwaa_sso" {
-  source = "github.com/dexlabsio/terraform-modules//aws/mwaa-sso?ref=main"
+  source = "github.com/dexlabsio/terraform-modules//aws/terraform/mwaa-sso?ref=main"
 
   name                     = "MyCompanyAirflow"
   domain                   = "airflow.mycompany.com" 

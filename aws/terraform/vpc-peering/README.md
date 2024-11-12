@@ -23,7 +23,7 @@ your Terraform configuration:
 
 ```hcl
 module "dex_vpc_peering" {
-  source                = "https://github.com/dexlabsio/terraform-modules.git//aws/vpc-peering"
+  source                = "https://github.com/dexlabsio/terraform-modules.git//aws/terraform/vpc-peering"
 
   peering_connection_id = "pcx-0example12345"
   peer_cidr_block       = "172.16.10.0/24"  // we'll provide this information

@@ -61,7 +61,7 @@ To use this module, include it in your Terraform configurations and provide the 
 
 ```hcl
 module "dex_roles" {
-  source                     = "git::https://github.com/dexlabsio/terraform-modules.git//aws/dex-roles"
+  source                     = "git::https://github.com/dexlabsio/terraform-modules.git//aws/terraform/dex-roles"
 
   athena_results_bucket_name = "my-athena-results-bucket"
   dex_lakehouse_bucket_name  = "my-dex-lakehouse-bucket"

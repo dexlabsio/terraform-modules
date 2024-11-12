@@ -32,7 +32,7 @@ your Terraform configuration:
 
 ```hcl
 module "dex_vpc_peering" {
-  source                = "https://github.com/dexlabsio/terraform-modules.git//cross-account-secrets"
+  source                = "https://github.com/dexlabsio/terraform-modules.git//aws/terraform/cross-account-secrets"
 
   secrets_arn_list = ["arn:aws:secretsmanager:region:source-account-id:secret:secret-name"]
   kms_keys_id_list = ["6aab8134-f139-44f2-88d3-4cd016cdf0ce"]

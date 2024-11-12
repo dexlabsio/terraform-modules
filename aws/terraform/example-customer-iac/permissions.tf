@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "dex_lakehouse" {
 }
 
 module "dex_roles" {
-  source                     = "git::https://github.com/dexlabsio/terraform-modules.git//aws/dex-roles"
+  source                     = "git::https://github.com/dexlabsio/terraform-modules.git//aws/terraform/dex-roles"
 
   athena_results_bucket_name = aws_s3_bucket.athena_results.id  # Change this if you already have a bucket for athena results
   dex_lakehouse_bucket_name  = aws_s3_bucket.dex_lakehouse.id   # Change this if you already have a bucket for the dex lakehouse
