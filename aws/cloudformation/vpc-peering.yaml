@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create a VPC peering connection accepter, routes, and security group rules.
+
+Parameters:
+  PeeringConnectionId:
+    Type: String
+    Description: The ID of the VPC peering connection to accept.
+  
+  RouteTableIds:
+    Type: List<String>
+    Description: List of route table IDs to update with the peer route.
+  
+  PeerCidrBlock:
+    Type: String
+    Description: The CIDR block of the peer VPC.
+
+  SecurityGroupRules:
+    Type: List<Object>
+    Description: List of security group rules for ingress.
+    Schema:
+      - from_port: Integer
+      - to_port: Integer
+      - protocol: String
+      - security_group_id: String
+
+Resources:
+  # VPC Peering Connection Accepter
+  VPCPeeringConnectionAccepter:
+    Type: AWS::EC2::VPCPeeringConnection
+    Properties:
+      VpcPeeringConnectionId: !Ref PeeringConnectionId
+      AutoAccept: true
+      Tags:
+        - Key: Name
+          Value: "Accepted deX Peering Connection"
+
+  # Route for Peering Connection
+  PeerRoutes:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableIds: !Ref RouteTableIds
+      DestinationCidrBlock: !Ref PeerCidrBlock
+      VpcPeeringConnectionId: !Ref PeeringConnectionId
+
+  # Security Group Ingress Rules
+  IngressSecurityGroupRules:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Select [ 0, !Ref SecurityGroupRules ]
+      IpProtocol: !Select [ 2, !Ref SecurityGroupRules ]
+      FromPort: !Select [ 1, !Ref SecurityGroupRules ]
+      ToPort: !Select [ 3, !Ref SecurityGroupRules ]
+      CidrIp: !Ref PeerCidrBlock
+
