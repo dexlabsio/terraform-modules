@@ -1,7 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  AWS Marketplace product template for creating resources for Athena and Glue operations.
-  The template includes S3 buckets with customer-specific names, IAM roles, policies, and an Athena workgroup.
+  Dex Cloudformation template for creating resources for Athena and Glue setup.
+  The template creates:
+   - 2 buckets for Athena operations;
+   - A Athena Workgroup named dex-dbt-sql-prod;
+   - 2 roles and policies that allow role assumption and control over the created S3, Athena and Glue resources.
 
 Parameters:
   CompanyName:
@@ -12,24 +15,28 @@ Resources:
   AthenaResultsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "dex-athena-results-${CompanyName}-auto"
+      BucketName: !Sub "dex-athena-results-${CompanyName}-3d816fa4"
       AccessControl: Private
       Tags:
         - Key: Name
           Value: Athena Results Bucket
-        - Key: Environment
-          Value: Example
+        - Key: Cloudformation
+          Value: true
+        - Key: Owner
+          Value: deX
 
   DexLakehouseBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "dex-dex-lakehouse-${CompanyName}-auto"
+      BucketName: !Sub "dex-lakehouse-${CompanyName}-3d816fa4"
       AccessControl: Private
       Tags:
         - Key: Name
           Value: Dex Lakehouse Bucket
-        - Key: Environment
-          Value: Example
+        - Key: Cloudformation
+          Value: true
+        - Key: Owner
+          Value: deX
 
   AthenaSparkRole:
     Type: AWS::IAM::Role
@@ -217,10 +224,10 @@ Resources:
   AthenaWorkGroup:
     Type: AWS::Athena::WorkGroup
     Properties:
-      Name: "dbt-sql-prod"
+      Name: "dex-dbt-sql-prod"
       WorkGroupConfiguration:
         ResultConfiguration:
-          OutputLocation: !Sub "s3://${AthenaResultsBucket}/dbt_sql_prod/"
+          OutputLocation: !Sub "s3://${AthenaResultsBucket}/dex_dbt_sql_prod/"
         EnforceWorkGroupConfiguration: false
 
 Outputs:
