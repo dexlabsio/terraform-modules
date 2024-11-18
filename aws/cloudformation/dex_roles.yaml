@@ -12,12 +12,14 @@ Parameters:
   CompanyName:
     Type: String
     Description: Customer name to uniquely suffix the bucket names.
+    AllowedPattern: "^[a-z0-9-]+$"
+    ConstraintDescription: "CompanyName must contain only lowercase letters, numbers, and hyphens."
 
   CreateDexUser:
     Type: String
+    Description: Whether to create the dex-automation user and its access keys.
     AllowedValues: ["True", "False"]
     Default: "True"
-    Description: Whether to create the dex-automation user and its access keys.
 
 Resources:
   AthenaResultsBucket:
