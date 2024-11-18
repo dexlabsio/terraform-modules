@@ -221,13 +221,22 @@ Resources:
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-athena:*"
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-glue:*"
 
-  AthenaWorkGroup:
+  AthenaWorkGroupProd:
     Type: AWS::Athena::WorkGroup
     Properties:
       Name: "dex-dbt-sql-prod"
       WorkGroupConfiguration:
         ResultConfiguration:
           OutputLocation: !Sub "s3://${AthenaResultsBucket}/dex_dbt_sql_prod/"
+        EnforceWorkGroupConfiguration: false
+
+  AthenaWorkGroupDev:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: "dex-dbt-sql-dev"
+      WorkGroupConfiguration:
+        ResultConfiguration:
+          OutputLocation: !Sub "s3://${AthenaResultsBucket}/dex_dbt_sql_dev/"
         EnforceWorkGroupConfiguration: false
 
 Outputs:
@@ -240,6 +249,10 @@ Outputs:
     Value: !Ref DexLakehouseBucket
 
   AthenaWorkGroupName:
-    Description: Name of the Athena WorkGroup
-    Value: !Ref AthenaWorkGroup
+    Description: Name of the Athena WorkGroup Prod
+    Value: !Ref AthenaWorkGroupProd
+
+  AthenaWorkGroupName:
+    Description: Name of the Athena WorkGroup Dev
+    Value: !Ref AthenaWorkGroupProd
 
