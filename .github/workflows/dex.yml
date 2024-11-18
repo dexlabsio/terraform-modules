@@ -1,0 +1,21 @@
+name: dex_actions_pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_static_dags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.S3_ADMIN_AUTOMATION_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.S3_ADMIN_AUTOMATION_SECRET_KEY }}
+          aws-region: us-east-1
+      - name: Sync DAGs to S3
+        run: aws s3 sync ./aws/cloudformation s3://${{ secrets.S3_PUBLIC_ASSETS_BUCKET }}/cloudformation
