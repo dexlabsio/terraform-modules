@@ -254,15 +254,6 @@ Resources:
     Type: AWS::IAM::User
     Properties:
       UserName: dex-automation
-      Policies:
-        - PolicyName: AttachDexAutomationPolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action: "iam:PassRole"
-                Resource:
-                  - !Ref DexAutomationPolicy
 
   DexAutomationAccessKey:
     Condition: CreateDexUserCondition
