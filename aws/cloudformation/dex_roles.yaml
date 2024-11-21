@@ -2,10 +2,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: >
   Dex Cloudformation template for creating resources for Athena and Glue setup.
   The template creates:
-   - 2 buckets for Athena operations;
-   - 2 Athena Workgroups named: dex-dbt-sql-prod and dex-dbt-sql-dev;
-   - 2 roles and policies that allow role assumption and control over the created S3, Athena and Glue resources.
-   - Creates a user named dex-automation with DexAutomationPolicy; also generates access keys for the user created.
+   2 buckets for Athena operations;
+   2 Athena Workgroups named: dex-dbt-sql-prod and dex-dbt-sql-dev;
+   2 roles and policies that allow role assumption and control over the created S3, Athena and Glue resources;
+   A user named dex-automation with DexAutomationPolicy and a pair of access keys.
 
 Parameters:
   InstallationID:
@@ -28,7 +28,7 @@ Resources:
       AccessControl: Private
       Tags:
         - Key: Name
-          Value: Athena Results Bucket
+          Value: Dex Athena Results Bucket
         - Key: Cloudformation
           Value: true
         - Key: Owner
@@ -41,7 +41,7 @@ Resources:
       AccessControl: Private
       Tags:
         - Key: Name
-          Value: Dex Lakehouse Bucket
+          Value: Dex Athena Lakehouse Bucket
         - Key: Cloudformation
           Value: true
         - Key: Owner
@@ -49,6 +49,7 @@ Resources:
 
   AthenaSparkRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Delete
     Properties:
       RoleName: deXAthenaSparkRole
       AssumeRolePolicyDocument:
@@ -111,6 +112,7 @@ Resources:
 
   GlueCrawlerRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Delete
     Properties:
       RoleName: deXGlueCrawlerRole
       AssumeRolePolicyDocument:
@@ -167,6 +169,7 @@ Resources:
 
   DexAutomationRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Delete
     Properties:
       RoleName: deXAutomationRole
       AssumeRolePolicyDocument:
@@ -179,6 +182,7 @@ Resources:
 
   DexAutomationPolicy:
     Type: AWS::IAM::Policy
+    DeletionPolicy: Delete
     Properties:
       PolicyName: DexAutomationPolicy
       Roles:
@@ -234,6 +238,7 @@ Resources:
 
   AthenaWorkGroupProd:
     Type: AWS::Athena::WorkGroup
+    DeletionPolicy: Delete
     Properties:
       Name: "dex-dbt-sql-prod"
       WorkGroupConfiguration:
@@ -243,6 +248,7 @@ Resources:
 
   AthenaWorkGroupDev:
     Type: AWS::Athena::WorkGroup
+    DeletionPolicy: Delete
     Properties:
       Name: "dex-dbt-sql-dev"
       WorkGroupConfiguration:
@@ -252,12 +258,14 @@ Resources:
 
   DexAutomationUser:
     Condition: CreateDexUserCondition
+    DeletionPolicy: Delete
     Type: AWS::IAM::User
     Properties:
       UserName: dex-automation
 
   DexAutomationAccessKey:
     Condition: CreateDexUserCondition
+    DeletionPolicy: Delete
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref DexAutomationUser
