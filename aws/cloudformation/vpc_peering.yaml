@@ -12,7 +12,7 @@ Parameters:
 
   PeerCidrBlock:
     Type: String
-    Description: The CIDR block of the peer VPC.
+    Description: The CIDR block of the peer VPC (Provided by deX).
 
   SecurityGroupRules:
     Type: List<CommaDelimitedList>
