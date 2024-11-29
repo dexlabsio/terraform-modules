@@ -1,27 +1,22 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: CloudFormation template to create a VPC peering connection accepter, routes, and security group rules.
+Description: Template to create a VPC peering connection accepter, routes, and security group ingress rules.
 
 Parameters:
   PeeringConnectionId:
     Type: String
-    Description: The ID of the VPC peering connection to accept.
-  
+    Description: The ID of the VPC peering connection to be accepted.
+
   RouteTableIds:
     Type: List<String>
-    Description: List of route table IDs to update with the peer route.
-  
+    Description: The IDs of the route tables to add the peering routes to.
+
   PeerCidrBlock:
     Type: String
     Description: The CIDR block of the peer VPC.
 
   SecurityGroupRules:
-    Type: List<Object>
-    Description: List of security group rules for ingress.
-    Schema:
-      - from_port: Integer
-      - to_port: Integer
-      - protocol: String
-      - security_group_id: String
+    Type: List<CommaDelimitedList>
+    Description: A list of security group rules in the format from_port,to_port,protocol,security_group_id.
 
 Resources:
   # VPC Peering Connection Accepter
@@ -34,21 +29,36 @@ Resources:
         - Key: Name
           Value: "Accepted deX Peering Connection"
 
-  # Route for Peering Connection
+  # Routes for Peering Connection
   PeerRoutes:
-    Type: AWS::EC2::Route
+    Type: AWS::CloudFormation::Stack
     Properties:
-      RouteTableIds: !Ref RouteTableIds
-      DestinationCidrBlock: !Ref PeerCidrBlock
-      VpcPeeringConnectionId: !Ref PeeringConnectionId
+      TemplateBody: |
+        AWSTemplateFormatVersion: '2010-09-09'
+        Resources:
+          {{#each RouteTableIds}}
+          PeerRoute{{@index}}:
+            Type: AWS::EC2::Route
+            Properties:
+              RouteTableId: {{this}}
+              DestinationCidrBlock: !Ref PeerCidrBlock
+              VpcPeeringConnectionId: !Ref PeeringConnectionId
+          {{/each}}
 
   # Security Group Ingress Rules
-  IngressSecurityGroupRules:
-    Type: AWS::EC2::SecurityGroupIngress
+  SecurityGroupIngressRules:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      GroupId: !Select [ 0, !Ref SecurityGroupRules ]
-      IpProtocol: !Select [ 2, !Ref SecurityGroupRules ]
-      FromPort: !Select [ 1, !Ref SecurityGroupRules ]
-      ToPort: !Select [ 3, !Ref SecurityGroupRules ]
-      CidrIp: !Ref PeerCidrBlock
-
+      TemplateBody: |
+        AWSTemplateFormatVersion: '2010-09-09'
+        Resources:
+          {{#each SecurityGroupRules}}
+          IngressRule{{@index}}:
+            Type: AWS::EC2::SecurityGroupIngress
+            Properties:
+              GroupId: {{@this[3]}}  # security_group_id
+              FromPort: {{@this[0]}}  # from_port
+              ToPort: {{@this[1]}}    # to_port
+              IpProtocol: {{@this[2]}}  # protocol
+              CidrIp: !Ref PeerCidrBlock
+          {{/each}}
