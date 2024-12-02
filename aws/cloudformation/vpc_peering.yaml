@@ -24,7 +24,6 @@ Resources:
     Type: AWS::EC2::VPCPeeringConnection
     Properties:
       VpcPeeringConnectionId: !Ref PeeringConnectionId
-      AutoAccept: true
       Tags:
         - Key: Name
           Value: "Accepted deX Peering Connection"
