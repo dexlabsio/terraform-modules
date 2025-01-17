@@ -282,13 +282,13 @@ Outputs:
     Description: Name of the Dex Lakehouse bucket
     Value: !Ref DexLakehouseBucket
 
-  AthenaWorkGroupName:
+  AthenaWorkGroupProdName:
     Description: Name of the Athena WorkGroup Prod
     Value: !Ref AthenaWorkGroupProd
 
-  AthenaWorkGroupName:
+  AthenaWorkGroupDevName:
     Description: Name of the Athena WorkGroup Dev
-    Value: !Ref AthenaWorkGroupProd
+    Value: !Ref AthenaWorkGroupDev
 
   DexAutomationAccessKeyId:
     Condition: CreateDexUserCondition
