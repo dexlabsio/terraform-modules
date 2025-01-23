@@ -13,35 +13,7 @@ KEY_FILE_NAME = f"{SERVICE_ACCOUNT_NAME}-key.json"
 
 SERVICE_ACCOUNT_EMAIL = f"{SERVICE_ACCOUNT_NAME}@{PROJECT_ID}.iam.gserviceaccount.com"
 
-# Step 1: Delete service account keys
-print("Deleting service account keys...")
-
-try:
-    keys_list = subprocess.run([
-        "gcloud", "iam", "service-accounts", "keys", "list",
-        "--iam-account", SERVICE_ACCOUNT_EMAIL,
-        "--project", PROJECT_ID,
-        "--managed-by", "user",
-        "--format=value(name)"
-    ], check=True, stdout=subprocess.PIPE, text=True).stdout.strip()
-
-    if keys_list:
-        keys = keys_list.split("\n")
-        for key in keys:
-            print(f"Deleting key: {key}")
-            subprocess.run([
-                "gcloud", "iam", "service-accounts", "keys", "delete", key,
-                "--iam-account", SERVICE_ACCOUNT_EMAIL,
-                "--project", PROJECT_ID,
-                "--quiet"
-            ], check=True)
-        print("All keys deleted successfully.")
-    else:
-        print("No keys found for the service account.")
-except subprocess.CalledProcessError as e:
-    print(f"Failed to delete service account keys: {e}")
-
-# Step 2: Remove IAM policy bindings for predefined roles
+# Step 1: Remove IAM policy bindings for predefined roles
 print("Removing IAM policy bindings...")
 
 roles = [
