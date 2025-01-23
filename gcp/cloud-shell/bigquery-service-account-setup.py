@@ -136,6 +136,7 @@ existing_keys = run_command([
     "gcloud", "iam", "service-accounts", "keys", "list",
     "--iam-account", SERVICE_ACCOUNT_EMAIL,
     "--project", PROJECT_ID,
+    "--managed-by", "user",
     "--format=value(name)"
 ])
 
@@ -144,7 +145,8 @@ if existing_keys:
     run_command([
         "gcloud", "iam", "service-accounts", "keys", "list",
         "--iam-account", SERVICE_ACCOUNT_EMAIL,
-        "--project", PROJECT_ID
+        "--project", PROJECT_ID,
+        "--managed-by", "user",
     ])
 else:
     print("Generating service account key...")

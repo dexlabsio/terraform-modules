@@ -21,6 +21,7 @@ try:
         "gcloud", "iam", "service-accounts", "keys", "list",
         "--iam-account", SERVICE_ACCOUNT_EMAIL,
         "--project", PROJECT_ID,
+        "--managed-by", "user",
         "--format=value(name)"
     ], check=True, stdout=subprocess.PIPE, text=True).stdout.strip()
 
