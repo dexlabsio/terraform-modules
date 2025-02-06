@@ -74,6 +74,19 @@ if f"projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}" in existing_roles:
 else:
     print("Creating custom storage role...")
     storage_permissions = [
+        "storage.managedFolders.delete",
+        "storage.managedFolders.get",
+        "storage.managedFolders.list",
+        "storage.multipartUploads.abort",
+        "storage.multipartUploads.create",
+        "storage.multipartUploads.list",
+        "storage.multipartUploads.listParts",
+        "storage.objects.create",
+        "storage.objects.delete",
+        "storage.objects.get",
+        "storage.objects.list",
+        "storage.objects.restore",
+        "storage.objects.update",
         "bigquery.datasets.create",
         "bigquery.datasets.get",
         "bigquery.datasets.getIamPolicy",
