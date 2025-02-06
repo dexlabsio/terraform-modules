@@ -14,6 +14,25 @@ This module is intended for public use, allowing customers to easily set up and 
 
 Upon successful execution, customers will have a fully configured Service Account along with an associated JSON key file. This key file can then be provided to the Dex platform during the setup phase.
 
+## Permissions
+
+Running the setup and teardown scripts requires the following permissions:
+
+```
+iam.roles.create
+iam.roles.get
+iam.roles.list
+iam.roles.update
+iam.serviceAccountKeys.create
+iam.serviceAccountKeys.list
+iam.serviceAccounts.create
+iam.serviceAccounts.get
+iam.serviceAccounts.list
+resourcemanager.projects.get
+resourcemanager.projects.getIamPolicy
+resourcemanager.projects.setIamPolicy
+```
+
 ---
 
 ## Setting up the resources
