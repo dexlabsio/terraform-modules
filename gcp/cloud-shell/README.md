@@ -14,7 +14,7 @@ This module is intended for public use, allowing customers to easily set up and 
 
 Upon successful execution, customers will have a fully configured Service Account along with an associated JSON key file. This key file can then be provided to the Dex platform during the setup phase.
 
-## Permissions
+## Needed permissions
 
 Running the setup and teardown scripts requires the following permissions:
 
