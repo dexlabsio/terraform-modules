@@ -39,33 +39,7 @@ else:
         "--project", PROJECT_ID
     ], check=True)
 
-# Step 2: Assign predefined roles (BigQuery User and Editor)
-print("Assigning BigQuery roles...")
-
-roles = [
-    "roles/bigquery.user",
-    "roles/bigquery.dataEditor"
-]
-
-for role in roles:
-    print(f"Checking role {role} assignment...")
-    policy_check = run_command([
-        "gcloud", "projects", "get-iam-policy", PROJECT_ID,
-        "--flatten=bindings[].members",
-        "--filter", f"bindings.role={role} AND bindings.members=serviceAccount:{SERVICE_ACCOUNT_EMAIL}",
-        "--format=value(bindings.members)"
-    ])
-    
-    if policy_check:
-        print(f"Role {role} already assigned, skipping.")
-    else:
-        run_command([
-            "gcloud", "projects", "add-iam-policy-binding", PROJECT_ID,
-            "--member", f"serviceAccount:{SERVICE_ACCOUNT_EMAIL}",
-            "--role", role
-        ], check=True)
-
-# Step 3: Define custom storage role permissions
+# Step 2: Define custom storage role permissions
 print("Checking if custom storage role exists...")
 existing_roles = run_command(["gcloud", "iam", "roles", "list", "--project", PROJECT_ID, "--format=value(name)"])
 
@@ -126,7 +100,7 @@ else:
     finally:
         os.remove(temp_file_path)
 
-# Step 4: Assign custom storage role to the service account
+# Step 3: Assign custom storage role to the service account
 print("Checking custom storage role assignment...")
 
 custom_role_binding_check = run_command([
@@ -146,7 +120,7 @@ else:
         "--role", f"projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}"
     ], check=True)
 
-# Step 5: Generate service account key JSON file
+# Step 4: Generate service account key JSON file
 print("Checking if service account key exists...")
 existing_keys = run_command([
     "gcloud", "iam", "service-accounts", "keys", "list",
